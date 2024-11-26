@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>상품 상세</title>
+  <link rel="stylesheet" href="/pages/style.css">
+  <style>
+    body {
+      font-family: 'SUIT', sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      background-color: #f9f9f9;
+    }
+  
+    .product-container {
+      max-width: 600px;
+      margin: 30px auto;
+      margin-top: 100px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 20px;
+      background-color: white;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+  
+    .product-container img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+  
+    .product-details {
+      margin-top: 20px;
+    }
+  
+    .product-details h2 {
+      font-size: 26px;
+      margin-bottom: 15px;
+      color: #333;
+    }
+  
+    .product-details p {
+      margin: 10px 0;
+      font-size: 16px;
+      color: #555;
+    }
+  
+    .product-details strong {
+      color: #333;
+    }
+  
+    .actions {
+      margin-top: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  
+    .like-button {
+      width: 40px;
+      height: 40px;
+      background-image: url('../images/before-like.png'); /* 임시 하트 이미지 */
+      background-size: cover;
+      border: none;
+      cursor: pointer;
+      background-color: transparent;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+  
+    .like-button.active {
+      background-image: url('../images/after-like.png'); /* 클릭 시 하트 비어있는 이미지 */
+    }
+  
+    .like-button:hover {
+      transform: scale(1.1);
+      opacity: 0.8;
+    }
+  
+    .back-button {
+      text-decoration: none;
+      color: white;
+      background-color: #007bff;
+      padding: 12px 20px;
+      border-radius: 6px;
+      text-align: center;
+      width: 48%;
+    }
+  
+    .back-button:hover {
+      background-color: #0056b3;
+    }
+  
+    /* 반응형 디자인 */
+    @media (max-width: 600px) {
+      .product-container {
+        padding: 15px;
+      }
+  
+      .product-details h2 {
+        font-size: 22px;
+      }
+  
+      .product-details p {
+        font-size: 14px;
+      }
+  
+      .actions {
+        flex-direction: column;
+        gap: 10px;
+      }
+  
+      .back-button {
+        width: 100%;
+      }
+    }
+  </style>  
+</head>
+<body>
+  <header>
+    <a href="/"><h1 id="title">SUNRIN THUNDER ⚡</h1></a>
+    <nav>
+        <ul>
+            <li><a href="/product/life">생활용품</a></li>
+            <li><a href="/product/electronics">전자제품</a></li>
+            <li><a href="/product/create">상품 등록</a></li>
+            <li><a href="/product/like">찜목록</a></li>
+        </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="product-container">
+      <img id="product-image" src="" alt="상품 이미지">
+      <div class="product-details">
+        <h2 id="product-name">상품 이름</h2>
+        <p><strong>가격:</strong> <span id="product-price">0</span>원</p>
+        <p><strong>카테고리:</strong> <span id="product-category">카테고리</span></p>
+        <p><strong>설명:</strong> <span id="product-detail">설명 없음</span></p>
+      </div>
+      <div class="actions">
+        <img id="like-button" class="button like-button" src="../images/before-like.png" alt="찜하기">
+        <a href="/" class="back-button">뒤로 가기</a>
+      </div>
+    </div>
+  </main>
+  
+  <footer>
+    <div class="info"> 
+        <p>팀장 : 20212 박초은</p>
+        <p>팀원 : 20214 신지아</p>
+        <p>주소 : 서울특별시 용산구 선린인터넷 고등학교 정보보호과</p>
+    </div>
+    <div class="contact">
+        <p>문의 : 010-2416-7033</p>
+        <p>선린 인터넷 고등학교 학생들을 위한 중고 사이트 thunder market</p>
+        <p>&copy; sunrin thunder market. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    const path = window.location.pathname;
+    const productId = path.split('/')[2];
+    console.log(productId);
+    const likeButton = document.getElementById('like-button');
+
+    function isLiked(id) {
+      const likedProducts = JSON.parse(localStorage.getItem('likedProducts')) || [];
+      return likedProducts.includes(id);
+    }
+
+    function toggleLike(id) {
+      const likedProducts = JSON.parse(localStorage.getItem('likedProducts')) || [];
+      if (likedProducts.includes(id)) {
+        const index = likedProducts.indexOf(id);
+        likedProducts.splice(index, 1); 
+        localStorage.setItem('likedProducts', JSON.stringify(likedProducts));
+        return false; 
+      } else {
+        likedProducts.push(id);
+        localStorage.setItem('likedProducts', JSON.stringify(likedProducts));
+        return true; 
+      }
+    }
+
+    // 상품 정보를 가져오는 함수
+    function fetchProductDetails(productId) {
+      fetch(`/api/product/${productId}`)
+        .then(response => {
+          if (!response.ok) throw new Error('상품 정보를 불러올 수 없습니다.');
+          return response.json();
+        })
+        .then(response => {
+          document.getElementById('product-image').src = response.image || '/uploads/default-image.jpg'; 
+          document.getElementById('product-name').textContent = response.name;
+          document.getElementById('product-price').textContent = (response.price ? response.price : '가격 없음');
+          document.getElementById('product-category').textContent = response.category;
+          document.getElementById('product-detail').textContent = response.detail || '설명 없음';
+
+          if (isLiked(productId)) {
+            likeButton.textContent = '찜 취소';
+            likeButton.classList.add('active');
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          alert('상품 정보를 불러오는 데 실패했습니다.');
+        });
+    }
+
+    likeButton.addEventListener('click', () => {
+      const liked = toggleLike(productId);
+      if (liked) {
+        likeButton.textContent = '찜 취소';
+        likeButton.classList.add('active');
+      } else {
+        likeButton.textContent = '찜하기';
+        likeButton.classList.remove('active');
+      }
+    });
+
+    if (productId) {
+      fetchProductDetails(productId);
+    } else {
+      alert('상품 ID가 제공되지 않았습니다.');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>상품 등록</title>
+  <link rel="stylesheet" href="/pages/style.css">
+  <style>
+   /* 기본 스타일 */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7; /* 배경 색상 */
+      color: #333; /* 기본 텍스트 색상 */
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      color: #333;
+      font-size: 2em;
+      margin: 20px 0;
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    form {
+      background-color: #fff;
+      padding: 30px;
+      margin: 0 auto;
+      width: 80%;
+      max-width: 600px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 5%;
+    }
+
+    label {
+      display: block;
+      font-size: 1.1em;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="file"],
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      box-sizing: border-box;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    input[type="file"]:focus,
+    button:focus {
+      outline: none;
+      border-color: #fd820f; /* 포인트 컬러 */
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      font-size: 1em;
+    }
+
+    input[type="file"] {
+      padding: 10px;
+      font-size: 1em;
+    }
+
+    button {
+      background-color: #fd820f; /* 포인트 컬러 */
+      color: white;
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #e6720e; /* 포인트 컬러 hover */
+    }
+
+    input[type="radio"] {
+      margin-right: 10px;
+    }
+
+    p {
+      margin-bottom: 10px;
+      font-size: 1.1em;
+      color: #333;
+    }
+
+    /* 작은 화면에서의 반응형 처리 */
+    @media (max-width: 600px) {
+      form {
+        width: 90%;
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.5em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/"><h1 id="title">SUNRIN THUNDER ⚡</h1></a>
+    <nav>
+        <ul>
+            <li><a href="/product/life">생활용품</a></li>
+            <li><a href="/product/electronics">전자제품</a></li>
+            <li><a href="/product/create">상품 등록</a></li>
+            <li><a href="/product/like">찜목록</a></li>
+        </ul>
+    </nav>
+  </header>
+  <h1>상품 등록하기</h1>
+  <form action="/api/product/create" method="POST" enctype="multipart/form-data">
+    <label for="image">이미지 업로드:</label>
+    <input type="file" name="image" id="image" accept="image/*" required>
+    <br><br>
+
+    <label for="name">이름:</label>
+    <input type="text" name="name" id="name" placeholder="상품 이름" required>
+    <br><br>
+
+    <label for="detail">설명:</label>
+    <input type="text" name="detail" id="detail" placeholder="상품 설명" required>
+    <br><br>
+
+    <label for="price">가격:</label>
+    <input type="number" name="price" id="price" placeholder="상품 가격" required>
+    <br><br>
+
+    <p>카테고리:</p>
+    <label>
+      <input type="radio" name="category" value="전자제품" required>
+      전자제품
+    </label>
+    <label>
+      <input type="radio" name="category" value="생활용품" required>
+      생활용품
+    </label>
+    <br><br>
+
+    <button type="submit">상품 등록</button>
+  </form>
+  <footer>
+    <div class="info"> 
+        <p>팀장 : 20212 박초은</p>
+        <p>팀원 : 20214 신지아</p>
+        <p>주소 : 서울특별시 용산구 선린인터넷 고등학교 정보보호과</p>
+    </div>
+    <div class="contact">
+        <p>문의 : 010-2416-7033</p>
+        <p>선린 인터넷 고등학교 학생들을 위한 중고 사이트 thunder market</p>
+        <p>&copy; sunrin thunder market. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

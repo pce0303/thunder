@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>전자제품</title>
+  <link rel="stylesheet" href="/pages/style.css">
+  <style>
+    body {
+      font-family: 'SUIT', sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      background-color: #f9f9f9; /* 페이지 배경색 */
+      color: #333;
+    }
+    
+    h1 {
+      text-align: center;
+      margin-top: 100px;
+      margin-bottom: 20px;
+      font-size: 28px;
+    }
+    
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .product-card {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      text-align: center;
+      padding: 10px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .product-card img {
+      max-width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .product-card h3 {
+      font-size: 18px;
+      margin: 10px 0;
+      color: #333;
+    }
+    
+    .product-card p {
+      font-size: 16px;
+      color: #666;
+    }
+    
+    .product-card a {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 15px;
+      background-color: #fd820f;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+    
+    .product-card a:hover {
+      background-color: #e56d0c;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/"><h1 id="title">SUNRIN THUNDER ⚡</h1></a>
+    <nav>
+        <ul>
+            <li><a href="/product/life">생활용품</a></li>
+            <li><a href="/product/electronics">전자제품</a></li>
+            <li><a href="/product/create">상품 등록</a></li>
+            <li><a href="/product/like">찜목록</a></li>
+        </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>전자제품</h1>
+    <div class="product-grid" id="product-grid">
+      <!-- 전자제품 상품 카드 -->
+    </div>
+  </main>
+  
+  <footer>
+    <div class="info"> 
+        <p>팀장 : 20212 박초은</p>
+        <p>팀원 : 20214 신지아</p>
+        <p>주소 : 서울특별시 용산구 선린인터넷 고등학교 정보보호과</p>
+    </div>
+    <div class="contact">
+        <p>문의 : 010-2416-7033</p>
+        <p>선린 인터넷 고등학교 학생들을 위한 중고 사이트 thunder market</p>
+        <p>&copy; sunrin thunder market. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    async function fetchElectronics() {
+      try {
+        const response = await fetch('/api/product/category/electronics');
+        if (!response.ok) throw new Error('상품 데이터를 불러오지 못했습니다.');
+    
+        console.log(response);
+    
+        const products = await response.json();
+        console.log('products: ', products);
+    
+        const grid = document.getElementById('product-grid');
+        grid.innerHTML = '';
+    
+        if (products.length === 0) {
+          grid.innerHTML = '<p>등록된 전자제품이 없습니다.</p>'; 
+          return;
+        }
+    
+        products.forEach(product => {
+          const card = document.createElement('div');
+          card.className = 'product-card';
+          card.innerHTML = `
+            <img src="${product.image || '/uploads/default-image.jpg'}" alt="${product.name}">
+            <h3>${product.name}</h3>
+            <p>₩${product.price.toLocaleString()}</p>
+            <a href="/detail.html?id=${product.id}">상품 보기</a>
+          `;
+          grid.appendChild(card);
+        });
+      } catch (error) {
+        console.error(error);
+        alert('상품 데이터를 불러오는 데 실패했습니다.');
+      }
+    }
+
+    fetchElectronics();
+  </script>
+</body>
+</html>

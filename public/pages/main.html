@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sunrin Thunder</title>
+  <link rel="stylesheet" href="/pages/style.css">
+  <style>
+    body {
+      background-color: #f4f4f4;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 120px 0 20px 0;
+      font-size: 32px;
+    }
+
+    .show {
+      position: relative;
+      width: 100%;
+      height: 500px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;   
+    }
+
+    #background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(50%);
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+
+    .product-card {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      padding: 10px;
+      background-color: white;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .product-card img {
+      max-width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .product-card h3 {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+
+    .product-card p {
+      font-size: 16px;
+      color: #666;
+    }
+
+    .product-card a {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    .product-card a:hover {
+      background-color: #0056b3;
+    }
+
+    .typing-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%); 
+      display: flex;
+      align-items: center;
+      font-size: 2.5rem;
+      color: white;
+      text-align: center;
+      z-index: 2; 
+    }
+
+    .typing-text {
+      font-size: 2.5rem; 
+      color: white;     
+    }
+    
+    .cursor {
+      font-size: 2.5rem; 
+      color: white;
+      margin-left: 5px;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0% {
+        opacity: 1;
+      }      
+      50% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    /* 모달 스타일 */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7); /* 반투명 배경 */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000; /* 다른 요소들 위에 표시 */
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 500px; /* 최대 너비 */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+    }
+
+    .close-button {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* 모달 내부 폼 스타일 */
+    .modal form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal form label {
+      margin-bottom: 5px;
+    }
+
+    .modal form input[type="text"],
+    .modal form input[type="number"],
+    .modal form button {
+      height: 40px; 
+      padding: 5px; 
+      font-size: 1em; 
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .modal form button {
+      background-color: #fd820f; 
+      color: white;
+      height: 40px;
+      padding: 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .modal form button:hover {
+      background-color: #e6720e; 
+    }
+    
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/"><h1 id="title">SUNRIN THUNDER ⚡</h1></a>
+    <nav>
+      <ul>
+        <li><a href="/product/life">생활용품</a></li>
+        <li><a href="/product/electronics">전자제품</a></li>
+        <li><a href="/product/create">상품 등록</a></li>
+        <li><a href="/product/like">찜목록</a></li>
+        <li id="auth-button"><a href="/auth/login" class="login-button">로그인</a></li>
+      </ul>
+    </nav>
+  </header>
+  
+  <main>
+    <div class="show">
+      <img src="/images/sunrin.webp" alt="background" id="background">
+      <div class="typing-container">
+        <h2 class="typing-text" id="typing-text"></h2>
+        <span class="cursor">|</span>
+      </div>
+    </div>  
+    <h1>최근 등록된 상품</h1>
+    <div class="product-grid" id="product-grid"></div>
+  </main>
+
+  <footer>
+    <div class="info"> 
+      <p>팀장 : 20212 박초은</p>
+      <p>팀원 : 20214 신지아</p>
+      <p>주소 : 서울특별시 용산구 선린인터넷 고등학교 정보보호과</p>
+    </div>
+    <div class="contact">
+      <p>문의 : 010-2416-7033</p>
+      <p>선린 인터넷 고등학교 학생들을 위한 중고 사이트 thunder market</p>
+      <p>&copy; sunrin thunder market. All rights reserved.</p>
+    </div>
+  </footer>
+  <script>
+    const h2 = document.querySelector('.typing-text');
+const cursor = document.querySelector('.cursor');
+
+const typingText = 'Sunrin Second Hand Market !';
+let counter = 0;
+let isAdding = true;
+
+const typingAnimation = () => {
+  if (isAdding) {
+    h2.textContent += typingText[counter];
+    counter++;
+
+    if (counter === typingText.length) {
+      isAdding = false;
+      setTimeout(typingAnimation, 1000);
+      return;
+    }
+  } else {
+    h2.textContent = h2.textContent.slice(0, -1);
+    counter--;
+
+    if (counter === 0) {
+      isAdding = true;
+    }
+  }
+
+  setTimeout(typingAnimation, isAdding ? 100 : 50);
+};
+
+async function fetchProducts() {
+  try {
+    const response = await fetch('/api/products');
+    if (!response.ok) throw new Error('상품 데이터를 불러오지 못했습니다.');
+
+    const products = await response.json();
+    const grid = document.getElementById('product-grid');
+    grid.innerHTML = '';
+
+    products.forEach(product => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.innerHTML = `
+        <img src="${product.image || '/uploads/default-image.jpg'}" alt="${product.name}">
+        <h3>${product.name}</h3>
+        <p>₩${product.price.toLocaleString()}</p>
+        <a href="/product/${product.id}">상품 보기</a>
+        <button class="update-button" data-id="${product.id}">수정</button>
+        <button class="delete-button" data-id="${product.id}">삭제</button>
+      `;
+      grid.appendChild(card);
+    });
+  } catch (error) {
+    console.error(error);
+    alert('상품 데이터를 불러오는 데 실패했습니다.');
+  }
+}
+
+window.addEventListener('load', () => {
+  typingAnimation();
+  fetchProducts();
+
+  const grid = document.getElementById('product-grid');
+
+  grid.addEventListener('click', async (event) => {
+    if (event.target.classList.contains('update-button')) {
+      const productId = event.target.getAttribute('data-id');
+      const product = await fetch(`/api/product/${productId}`);
+      const productData = await product.json();
+
+      const formHtml = `
+      <div class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>상품 수정</h2>
+            <button class="close-button">&times;</button>
+          </div>
+          <form id="updateForm" enctype="multipart/form-data">
+            <label for="image">이미지 업로드:</label>
+            <input type="file" name="image" id="image" accept="image/*">
+            <br><br>
+            <label for="name">이름:</label>
+            <input type="text" name="name" id="name" value="${productData.name}" required>
+            <br><br>
+            <label for="detail">설명:</label>
+            <input type="text" name="detail" id="detail" value="${productData.detail}" required>
+            <br><br>
+            <label for="price">가격:</label>
+            <input type="number" name="price" id="price" value="${productData.price}" required>
+            <br><br>
+            <p>카테고리:</p>
+            <label>
+              <input type="radio" name="category" value="전자제품" ${productData.category === '전자제품' ? 'checked' : ''} required>
+              전자제품
+            </label>
+            <label>
+              <input type="radio" name="category" value="생활용품" ${productData.category === '생활용품' ? 'checked' : ''} required>
+              생활용품
+            </label>
+            <br><br>
+            <button type="submit">상품 수정</button>
+          </form>
+        </div>
+      </div>
+      `;
+
+      // 모달 띄우기
+      const modal = document.createElement('div');
+      modal.innerHTML = formHtml;
+      document.body.appendChild(modal);
+
+      // 모달 닫기
+      const closeButton = modal.querySelector('.close-button');
+      closeButton.addEventListener('click', () => {
+        document.body.removeChild(modal);
+      });
+
+      // 수정 폼 제출
+      modal.querySelector('#updateForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(modal.querySelector('#updateForm'));
+        formData.append('id', productId);
+
+        try {
+          const response = await fetch('/api/product/update', {
+            method: 'POST',
+            body: formData,
+          });
+          const result = await response.json();
+          alert(result.message);
+          fetchProducts();
+        } catch (error) {
+          console.error(error);
+          alert('상품 수정 중 오류가 발생했습니다.');
+        }
+
+        // 수정 폼 제거
+        document.body.removeChild(modal);
+      });
+    }
+
+    if (event.target.classList.contains('delete-button')) {
+      const productId = event.target.getAttribute('data-id');
+      const confirmation = confirm('정말로 이 상품을 삭제하시겠습니까?');
+
+      if (confirmation) {
+        try {
+          const response = await fetch('/api/product/delete', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id: productId }),
+          });
+          const result = await response.json();
+          alert(result.message);
+          fetchProducts(); 
+        } catch (error) {
+          console.error(error);
+          alert('상품 삭제 중 오류가 발생했습니다.');
+        }
+      }
+    }
+  });
+
+  // 사용자 정보 가져오기
+  async function fetchUser() {
+    try {
+      const response = await fetch('/auth/info');
+      if (!response.ok) throw new Error('사용자 정보를 가져오는 데 실패했습니다.');
+
+      const userData = await response.json();
+      const authButton = document.getElementById('auth-button');
+      authButton.innerHTML = `<a href="/auth/logout" class="login-button">${userData.name}</a>`; 
+    } catch (error) {
+      console.error(error);
+      const authButton = document.getElementById('auth-button');
+      authButton.innerHTML = `<a href="/auth/login" class="login-button">로그인</a>`;
+    }
+  }
+
+  fetchUser();
+
+  document.getElementById('auth-button').addEventListener('click', (event) => {
+    if (event.target.classList.contains('login-button')) {
+      window.location.href = '/auth/logout';
+    }
+  });
+});  
+  </script>  
+</body>
